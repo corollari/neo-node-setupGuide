@@ -45,11 +45,11 @@ wget https://packet.azureedge.net/neochain/testnet/full/0-3634399/DE680EF7CAB464
 ## Installing the required plugins
 ```bash
 ./neo-cli # Run neo-cli
-install SimplePolicyPlugin
+install SimplePolicy
 install CoreMetrics
 install RpcNep5Tracker
 install ImportBlocks
-install RpcSystemAssetTrackerPlugin
+install RpcSystemAssetTracker
 install ApplicationLogs
 install RpcWallet
 exit
