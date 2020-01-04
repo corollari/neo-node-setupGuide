@@ -43,7 +43,7 @@ wget https://packet.azureedge.net/neochain/testnet/full/0-3634399/DE680EF7CAB464
 ```
 
 ## Installing the required plugins
-```
+```bash
 ./neo-cli # Run neo-cli
 install SimplePolicyPlugin
 install CoreMetrics
@@ -56,7 +56,37 @@ exit
 ```
 These instructions install all the required and recommended plugins, you can browse other optional plugins [here](https://docs.neo.org/docs/en-us/node/cli/config.html#downloading-plugins-from-github) and install them in the same way.
 
+## Choosing the network
+### MainNet
+In the case of wanting to run the node on Mainnet skip this step and go directly to the next one, [Running the node](#running-the-node).
+
+### Testnet
+You'll need to run the following instructions to make the node be part of the Testnet network:
+```bash
+cp config.testnet.json config.json
+cp protocol.testnet.json protocol.json
+```
+
 ## Running the node
+```bash
+screen -S neo # Create a new screen
+./neo-cli
+show state
+```
+Now press `Ctrl-a` followed by `d` to detach the screen session, after which you can safely exit the ssh connection with `exit`.
+
+All that's left now is to wait for the node to sync with the current state of the blokchain, you can check the current blockheight of the node by reattaching the screen with `screen -r neo`, which should be equal to the block height displayed on [CoZ's monitor](http://monitor.cityofzion.io/) when it has finished synching.
+
+Following is a table of the time it took us to sync our nodes on the 4th Of January of 2020:
+
+| MainNet   | TestNet |
+|:---------:|:-------:|
+| ~36 hours |    -    |
+
+## Getting SSL certificates
+TODO
+
+## Setting up a reverse proxy
 TODO
 
 ## Appendix: Making your node ultra-secure
