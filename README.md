@@ -99,7 +99,7 @@ Following is a table of the time it took us to sync our nodes on the 4th Of Janu
 
 | MainNet   | TestNet |
 |:---------:|:-------:|
-| ~36 hours |    -    |
+| ~24 hours |    -    |
 
 ## Getting SSL certificates
 TODO
