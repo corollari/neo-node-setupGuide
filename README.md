@@ -97,12 +97,21 @@ All that's left now is to wait for the node to sync with the current state of th
 
 Following is a table of the time it took us to sync our nodes on the 4th Of January of 2020:
 
-| MainNet   | TestNet |
-|:---------:|:-------:|
-| ~24 hours |    -    |
+| MainNet   | TestNet  |
+|:---------:|:--------:|
+|  24 hours | 3.5 hours |
 
 ## Getting SSL certificates
-TODO
+```bash
+# Install certbot
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository universe
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install certbot python-certbot-nginx
+sudo certbot --nginx
+```
 
 ## Setting up a reverse proxy
 TODO
