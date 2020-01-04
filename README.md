@@ -30,7 +30,12 @@ In this guide we will install Ubuntu 18.04 LTS on the cloud instance, the reason
 
 6. Skip to the next step
 
-7. Add an HTTPS security rule a `Custom TCP Rule` with port range as `10333` (if you want your node to run in MainNet) or `20333` (if you want it to be a TestNet node). All rules should have `Anywhere` as Source. The final setup should look like this (replacing 10333 with 20333 for testnet nodes):
+7. Add the following security rules (do not remove the SSH rule added by default):
+| Type     | Protocol  | Port Range | Source   |
+|----------|-----------|------------|----------|
+| HTTP     | TCP       | 80         | Anywhere |
+| Custom TCP Rule     | TCP       | 10333 (20333 if testnet)  | Anywhere |
+| HTTPS    | TCP       | 443        | Anywhere |
 
 8. Launch the instance
 
@@ -41,10 +46,10 @@ In this guide we will install Ubuntu 18.04 LTS on the cloud instance, the reason
 # Basic OS updating
 sudo apt-get update
 sudo apt-get upgrade
+sudo apt-get install libleveldb-dev sqlite3 libsqlite3-dev libunwind8-dev unzip nginx
 sudo reboot
 # Connect again through SSH
 # Install neo-cli
-sudo apt-get install libleveldb-dev sqlite3 libsqlite3-dev libunwind8-dev unzip
 wget https://github.com/neo-project/neo-node/releases/download/v2.10.3/neo-cli-linux-x64.zip # Download neo-cli
 unzip neo-cli-linux-x64.zip
 cd neo-cli
@@ -88,7 +93,7 @@ cp protocol.testnet.json protocol.json
 ## Running the node
 ```bash
 screen -S neo # Create a new screen
-./neo-cli
+./neo-cli --rpc
 show state
 ```
 Now press `Ctrl-a` followed by `d` to detach the screen session, after which you can safely exit the ssh connection with `exit`.
@@ -97,27 +102,68 @@ All that's left now is to wait for the node to sync with the current state of th
 
 Following is a table of the time it took us to sync our nodes on the 4th Of January of 2020:
 
-| MainNet   | TestNet  |
-|:---------:|:--------:|
+| MainNet   | TestNet   |
+|:---------:|:---------:|
 |  24 hours | 3.5 hours |
+
+## Setting up a reverse proxy
+**Note**: In this whole section you should replace all instances of `example.com` with the domain from which you plan to serve the RPC calls.
+
+Create a new configuration file for nginx:
+```bash
+cd /etc/nginx/sites-enabled
+sudo vi example.com.conf
+```
+Paste the following code inside the file:
+```
+server {
+	server_name example.com;
+	set $upstream 127.0.0.1:10332;
+	location / {
+		proxy_pass_header Authorization;
+		proxy_pass http://$upstream;
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_http_version 1.1;
+		proxy_set_header Connection “”;
+		proxy_buffering off;
+		client_max_body_size 0;
+		proxy_read_timeout 36000s;
+		proxy_redirect off;
+	}
+	listen 80;
+}
+```
+Remember to replace 10332 with 20332 in case of running a testnet node.
+
+Finally, restart nginx:
+```
+sudo service nginx reload
+```
 
 ## Getting SSL certificates
 ```bash
 # Install certbot
-sudo apt-get update
-sudo apt-get install software-properties-common
-sudo add-apt-repository universe
 sudo add-apt-repository ppa:certbot/certbot
 sudo apt-get update
 sudo apt-get install certbot python-certbot-nginx
+
+# Run the certbot wizard
 sudo certbot --nginx
 ```
 
-## Setting up a reverse proxy
+Certbot automatically sets up a renewal timer so certificate renewal will be automatic and won't require any further work.
+
+## Set up a supervisor
 TODO
 
+Special thanks to Alex Guba, as this section was taken from [on of his Medium posts](https://medium.com/@gubanotorious/creating-and-running-a-neo-node-on-microsoft-azure-in-under-30-minutes-ad8d79b9edf).
+
 ## Extra: Add your node to CoZ's monitor
-TODO
+1. Fork [neo-mon](https://github.com/CityOfZion/neo-mon)
+2. Modify [mainnet.json](https://github.com/CityOfZion/neo-mon/blob/master/docs/assets/mainnet.json) and/or [testnet.json](https://github.com/CityOfZion/neo-mon/blob/master/docs/assets/testnet.json), adding your nodes to the list
+3. Create a Pull Request to move your changes into the CityOfZion repo
 
 ## Appendix: Making your node ultra-secure
 Follow [the standard](https://github.com/CityOfZion/standards/blob/master/nodes.md) created by CityOfZion to be used in the consensus nodes that they run.
