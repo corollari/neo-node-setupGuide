@@ -17,6 +17,24 @@ In this guide we will install Ubuntu 18.04 LTS on the cloud instance, the reason
 - Ubuntu has all the packages needed during the guide directly available
 - Using a LTS release should reduce breakage caused by updates
 
+### Launching & setting up a t2.large instance
+1. Go to [AWS' EC2 dashboard](https://console.aws.amazon.com/ec2/) & start the `Launch Instance` wizard
+
+2. Select `Ubuntu Server 18.04 LTS`
+
+3. Select `t2.large` and go to the next step
+
+4. Skip to the next step
+
+5. Modify the storage to `100 GiB`
+
+6. Skip to the next step
+
+7. Add an HTTPS security rule a `Custom TCP Rule` with port range as `10333` (if you want your node to run in MainNet) or `20333` (if you want it to be a TestNet node). All rules should have `Anywhere` as Source. The final setup should look like this (replacing 10333 with 20333 for testnet nodes):
+
+8. Launch the instance
+
+9. Connect to the instance using `ssh -i Downloads/neo-node.pem ubuntu@1.2.3.4`, replacing 1.2.3.4 with your node's IP and `Downloads/neo-node.pem` with the path of your AWS' private key
 
 ## Installing the node
 ```bash
@@ -87,6 +105,9 @@ Following is a table of the time it took us to sync our nodes on the 4th Of Janu
 TODO
 
 ## Setting up a reverse proxy
+TODO
+
+## Extra: Add your node to CoZ's monitor
 TODO
 
 ## Appendix: Making your node ultra-secure
