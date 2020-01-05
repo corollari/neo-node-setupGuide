@@ -157,7 +157,34 @@ sudo certbot --nginx
 Certbot automatically sets up a renewal timer so certificate renewal will be automatic and won't require any further work.
 
 ## Set up a supervisor
-TODO
+A supervisor will automatically restart your node in case it goes down or the server restarts. To install it create the following file:
+```bash
+sudo vi /etc/systemd/system/neoseed.service
+```
+And paste this code in there:
+```
+[Unit]
+After=network-online.target
+Requires=network-online.target
+[Service]
+WorkingDirectory=/home/ubuntu/neo-cli
+ExecStart=/home/ubuntu/neo-cli/neo-cli --rpc
+ExecStop=/bin/kill -SIGINT `ps ax | grep neo-cli | grep -v grep | awk ‘{print $1}’`
+Restart=always
+StandardInput=tty-force
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=neoseed
+User=ubuntu
+Group=ubuntu
+[Install]
+WantedBy=multi-user.target
+```
+Afterwards you only need to activate it:
+```
+sudo systemctl enable neoseed
+sudo systemctl start neoseed
+```
 
 Special thanks to Alex Guba, as this section was taken from [on of his Medium posts](https://medium.com/@gubanotorious/creating-and-running-a-neo-node-on-microsoft-azure-in-under-30-minutes-ad8d79b9edf).
 
