@@ -31,6 +31,7 @@ In this guide we will install Ubuntu 18.04 LTS on the cloud instance, the reason
 6. Skip to the next step
 
 7. Add the following security rules (do not remove the SSH rule added by default):
+
 | Type     | Protocol  | Port Range | Source   |
 |----------|-----------|------------|----------|
 | HTTP     | TCP       | 80         | Anywhere |
