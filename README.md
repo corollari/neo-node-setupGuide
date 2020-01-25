@@ -2,7 +2,7 @@
 > A guide on how to set up a neo node with SSL certificate and a reverse proxy
 
 ## Why run your own node
-TODO
+See [this post](https://www.reddit.com/r/NEO/comments/7zx7ur/public_call_for_projects_launching_in_neo/).
 
 ## Choosing where to run the node
 First of all it's important to mention that you should probably run the node in a cloud provider instead of locally for the following reasons:
