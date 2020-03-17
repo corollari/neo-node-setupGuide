@@ -186,7 +186,7 @@ sudo systemctl enable neoseed
 sudo systemctl start neoseed
 ```
 
-Special thanks to Alex Guba, as this section was taken from [on of his Medium posts](https://medium.com/@gubanotorious/creating-and-running-a-neo-node-on-microsoft-azure-in-under-30-minutes-ad8d79b9edf).
+Special thanks to Alex Guba, as this section was taken from [one of his Medium posts](https://medium.com/@gubanotorious/creating-and-running-a-neo-node-on-microsoft-azure-in-under-30-minutes-ad8d79b9edf).
 
 ## Extra: Add your node to CoZ's monitor
 1. Fork [neo-mon](https://github.com/CityOfZion/neo-mon)
